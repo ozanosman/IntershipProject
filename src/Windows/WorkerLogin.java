@@ -1,15 +1,23 @@
 package Windows;
 
+import Utillity.DBConnection;
+import Utillity.Modal;
+
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
 
 /**
  * Administrator window class
  */
 public class WorkerLogin extends JFrame {
+    Connection conn=null;
+    Statement state=null;
+    int id=-1;
+
     JPanel Panel = new JPanel();
     JLabel usernameLabel=new JLabel("Име:");
-    JLabel passwordLabel=new JLabel("Фамилия:");
+    JLabel passwordLabel=new JLabel("Парола:");
     JTextField usernameTF=new JTextField();
     JTextField passwordTF=new JTextField();
     JButton loginBt=new JButton("Log in");
@@ -27,6 +35,7 @@ public class WorkerLogin extends JFrame {
         Panel.add(loginBt);
         Panel.add(backBt);
         this.add(Panel);
+        this.setLocationRelativeTo(null);
         ButtonSetUp();
     }
 
@@ -34,6 +43,34 @@ public class WorkerLogin extends JFrame {
         backBt.addActionListener(e -> {
             MainWindow window = new MainWindow();
             this.dispose();
+        });
+
+        loginBt.addActionListener(e -> {
+            String sql="Select username,password,type from Accounts";
+            conn= DBConnection.getConnection();
+            try {
+                boolean loggedIn = false;
+                conn = DBConnection.getConnection();
+                state = conn.createStatement();
+                ResultSet rs = state.executeQuery(sql);
+                while(rs.next()) {
+                    String username = rs.getString("username");
+                    String password = rs.getString("PASSWORD");
+                    String type = rs.getString("type");
+                    if (usernameTF.getText().equals(username)&&passwordTF.getText().equals(password)&&type.equals("Worker")) {
+                        loggedIn = true;
+                    }
+                }
+                if(loggedIn){
+                    WorkerWindow window = new WorkerWindow();
+                }else {
+                    Modal.render(this,"Warning!","Invalid username or password");
+                }
+
+            } catch (SQLException b) {
+                // TODO Auto-generated catch block
+                b.printStackTrace();
+            }
         });
     }
 }

@@ -14,6 +14,7 @@ public class MainWindow extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(400,400);
         this.setVisible(true);
+        this.setLocationRelativeTo(null);
         Panel.setLayout(new GridLayout(1,2));
         Panel.add(adminBt);
         Panel.add(workerBt);

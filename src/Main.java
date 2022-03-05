@@ -1,4 +1,4 @@
-import Windows.MainWindow;
+import Windows.*;
 
 /**
  * Main class

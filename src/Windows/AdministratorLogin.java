@@ -27,6 +27,7 @@ public class AdministratorLogin extends JFrame {
         Panel.add(loginBt);
         Panel.add(backBt);
         this.add(Panel);
+        this.setLocationRelativeTo(null);
         ButtonSetUp();
     }
 

@@ -23,12 +23,12 @@ public class MainWindow extends JFrame {
 
     public void ButtonSetUp(){
         workerBt.addActionListener(e -> {
-            WorkerWindow window = new WorkerWindow();
+            WorkerLogin window = new WorkerLogin();
             this.dispose();
         });
 
         adminBt.addActionListener(e -> {
-            AdministratorWindow window = new AdministratorWindow();
+            AdministratorLogin window = new AdministratorLogin();
             this.dispose();
         });
     }

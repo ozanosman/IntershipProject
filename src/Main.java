@@ -1,5 +1,4 @@
 import Windows.MainWindow;
-import Windows.WorkerWindow;
 
 /**
  * Main class

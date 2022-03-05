@@ -1,39 +1,133 @@
 package Windows;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/**
- * Administrator window class
- */
-public class WorkerWindow extends JFrame {
-    JPanel Panel = new JPanel();
-    JLabel usernameLabel=new JLabel("Име:");
-    JLabel passwordLabel=new JLabel("Фамилия:");
-    JTextField usernameTF=new JTextField();
-    JTextField passwordTF=new JTextField();
-    JButton loginBt=new JButton("Log in");
-    JButton backBt =new JButton("Назад");
+public class WorkerWindow extends JFrame
+{
+    private JPanel workerPanel;
 
-    public WorkerWindow(){
-        this.setSize(600, 600);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    private JComboBox tasksComboBox;
+
+    private JButton startButton;
+    private JButton pauseButton;
+    private JButton resetButton;
+    private JButton endButton;
+
+    private JLabel hoursLabel;
+    private JLabel minutesLabel;
+    private JLabel secondsLabel;
+    private JLabel millisecondsLabel;
+
+    private boolean state = true;
+
+    private int milliseconds = 0;
+    private int seconds = 0;
+    private int minutes = 0;
+    private int hours = 0;
+
+    public WorkerWindow()
+    {
+        this.add(tasksComboBox);
+        this.setContentPane(workerPanel);
+        this.setTitle("Worker Panel");
+        this.setSize(500, 250);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
-        Panel.setLayout(new GridLayout(3,2));
-        Panel.add(usernameLabel);
-        Panel.add(usernameTF);
-        Panel.add(passwordLabel);
-        Panel.add(passwordTF);
-        Panel.add(loginBt);
-        Panel.add(backBt);
-        this.add(Panel);
-        ButtonSetUp();
-    }
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    public void ButtonSetUp(){
-        backBt.addActionListener(e -> {
-            MainWindow window = new MainWindow();
-            this.dispose();
+        startButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                state = true;
+
+                Thread t = new Thread()
+                {
+                    public void run()
+                    {
+                        for (;;)
+                        {
+                            if (state == true)
+                            {
+                                try
+                                {
+                                    sleep(1);
+
+                                    if (milliseconds > 1000)
+                                    {
+                                        milliseconds = 0;
+                                        seconds++;
+                                    }
+
+                                    if (seconds > 60)
+                                    {
+                                        milliseconds = 0;
+                                        seconds = 0;
+                                        minutes++;
+                                    }
+
+                                    if (minutes > 60)
+                                    {
+                                        milliseconds = 0;
+                                        seconds = 0;
+                                        minutes = 0;
+                                        hours++;
+                                    }
+
+                                    milliseconds++;
+
+                                    millisecondsLabel.setText(milliseconds + "");
+                                    secondsLabel.setText(seconds + ":");
+                                    minutesLabel.setText(minutes + ":");
+                                    hoursLabel.setText(hours + ":");
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                };
+
+                t.start();
+            }
+        });
+
+        pauseButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                state = false;
+            }
+        });
+
+        resetButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                state = false;
+
+                milliseconds = 0;
+                seconds = 0;
+                minutes = 0;
+                hours = 0;
+
+                millisecondsLabel.setText("0");
+                secondsLabel.setText("0:");
+                minutesLabel.setText("0:");
+                hoursLabel.setText("0:");
+            }
         });
     }
 }

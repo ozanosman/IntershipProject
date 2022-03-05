@@ -27,12 +27,12 @@ public class WorkerWindow extends JFrame
     private int minutes = 0;
     private int hours = 0;
 
-    public WorkerWindow()
+    public WorkerWindow(String username)
     {
         this.add(tasksComboBox);
         this.setContentPane(workerPanel);
         this.setTitle("Worker Panel");
-        this.setSize(500, 250);
+        this.setSize(600, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -130,4 +130,5 @@ public class WorkerWindow extends JFrame
             }
         });
     }
+
 }

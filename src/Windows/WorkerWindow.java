@@ -8,12 +8,14 @@ public class WorkerWindow extends JFrame
 {
     private JPanel workerPanel;
 
+    private JLabel usernameLabel;
+
     private JComboBox tasksComboBox;
 
-    private JButton startButton;
-    private JButton pauseButton;
+    private JButton startWorkButton;
+    private JButton breakButton;
     private JButton resetButton;
-    private JButton endButton;
+    private JButton endWorkButton;
 
     private JLabel hoursLabel;
     private JLabel minutesLabel;
@@ -29,16 +31,16 @@ public class WorkerWindow extends JFrame
 
     public WorkerWindow(String username)
     {
-        this.add(tasksComboBox);
+        usernameLabel.setText(username);
         this.setContentPane(workerPanel);
         this.setTitle("Worker Panel");
-        this.setSize(600, 350);
+        this.setSize(500, 400);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        startButton.addActionListener(new ActionListener()
+        startWorkButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -102,12 +104,14 @@ public class WorkerWindow extends JFrame
             }
         });
 
-        pauseButton.addActionListener(new ActionListener()
+        breakButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 state = false;
+
+                startWorkButton.setText("Continue Work");
             }
         });
 
@@ -123,6 +127,8 @@ public class WorkerWindow extends JFrame
                 minutes = 0;
                 hours = 0;
 
+                startWorkButton.setText("Start Work");
+
                 millisecondsLabel.setText("0");
                 secondsLabel.setText("0:");
                 minutesLabel.setText("0:");
@@ -130,5 +136,4 @@ public class WorkerWindow extends JFrame
             }
         });
     }
-
 }

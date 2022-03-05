@@ -6,16 +6,16 @@ import java.awt.*;
 /**
  * Administrator window class
  */
-public class AdministratorWindow extends JFrame {
+public class WorkerLogin extends JFrame {
     JPanel Panel = new JPanel();
     JLabel usernameLabel=new JLabel("Име:");
     JLabel passwordLabel=new JLabel("Фамилия:");
     JTextField usernameTF=new JTextField();
     JTextField passwordTF=new JTextField();
     JButton loginBt=new JButton("Log in");
-    JButton backBt=new JButton("Назад");
+    JButton backBt =new JButton("Назад");
 
-    public AdministratorWindow(){
+    public WorkerLogin(){
         this.setSize(600, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);

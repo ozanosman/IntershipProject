@@ -1,12 +1,22 @@
 package Windows;
 
+import Utillity.DBConnection;
+import Utillity.Modal;
+
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Administrator window class
  */
 public class AdministratorLogin extends JFrame {
+    Connection conn=null;
+    Statement state=null;
+    String username;
     JPanel Panel = new JPanel();
     JLabel usernameLabel=new JLabel("Име:");
     JLabel passwordLabel=new JLabel("Фамилия:");
@@ -35,6 +45,34 @@ public class AdministratorLogin extends JFrame {
         backBt.addActionListener(e -> {
             MainWindow window = new MainWindow();
             this.dispose();
+        });
+
+        loginBt.addActionListener(e -> {
+            String sql="Select username,password,type from Accounts";
+            conn= DBConnection.getConnection();
+            try {
+                boolean loggedIn = false;
+                conn = DBConnection.getConnection();
+                state = conn.createStatement();
+                ResultSet rs = state.executeQuery(sql);
+                while(rs.next()) {
+                    username = rs.getString("username");
+                    String password = rs.getString("PASSWORD");
+                    String type = rs.getString("type");
+                    if (usernameTF.getText().equals(username)&&passwordTF.getText().equals(password)&&type.equals("Admin")) {
+                        loggedIn = true;
+                    }
+                }
+                if(loggedIn){
+                    WorkerWindow window = new WorkerWindow(username);
+                }else {
+                    Modal.render(this,"Warning!","Invalid username or password");
+                }
+
+            } catch (SQLException b) {
+                // TODO Auto-generated catch block
+                b.printStackTrace();
+            }
         });
     }
 }

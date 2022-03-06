@@ -13,7 +13,6 @@ import java.sql.*;
 public class WorkerLogin extends JFrame {
     Connection conn=null;
     Statement state=null;
-    int id=-1;
     String username;
 
     JPanel Panel = new JPanel();

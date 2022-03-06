@@ -13,7 +13,6 @@ import java.sql.*;
 public class WorkerLogin extends JFrame {
     Connection conn=null;
     Statement state=null;
-    String username;
 
     JPanel Panel = new JPanel();
     JLabel usernameLabel=new JLabel("Име:");
@@ -54,7 +53,7 @@ public class WorkerLogin extends JFrame {
                 state = conn.createStatement();
                 ResultSet rs = state.executeQuery(sql);
                 while(rs.next()) {
-                    username = rs.getString("username");
+                    String username = rs.getString("username");
                     String password = rs.getString("PASSWORD");
                     String type = rs.getString("type");
                     if (usernameTF.getText().equals(username)&&passwordTF.getText().equals(password)&&type.equals("Worker")) {
@@ -62,7 +61,7 @@ public class WorkerLogin extends JFrame {
                     }
                 }
                 if(loggedIn){
-                    WorkerWindow window = new WorkerWindow(username);
+                    WorkerWindow window = new WorkerWindow(usernameTF.getText());
                 }else {
                     Modal.render(this,"Warning!","Invalid username or password");
                 }

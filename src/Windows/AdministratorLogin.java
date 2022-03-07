@@ -69,7 +69,6 @@ public class AdministratorLogin extends JFrame {
                 }
 
             } catch (SQLException b) {
-                // TODO Auto-generated catch block
                 b.printStackTrace();
             }
         });

@@ -41,5 +41,9 @@ public class AdministratorMainWindow extends JFrame {
             WorkerWindow window = new WorkerWindow(username);
             this.dispose();
         });
+        editUserBt.addActionListener(e->{
+            AdministratorEditUser window = new AdministratorEditUser();
+            this.dispose();
+        });
     }
 }

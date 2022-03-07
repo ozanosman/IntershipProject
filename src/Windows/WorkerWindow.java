@@ -1,11 +1,16 @@
 package Windows;
 
+import Utillity.DBConnection;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.sql.*;
 
 public class WorkerWindow extends JFrame
 {
+    Connection conn = null;
+    PreparedStatement state = null;
+
     private JPanel workerPanel;
 
     private JLabel usernameLabel;
@@ -22,7 +27,9 @@ public class WorkerWindow extends JFrame
     private JLabel secondsLabel;
     private JLabel millisecondsLabel;
 
-    private boolean state = true;
+    private JTextField commentTextField;
+
+    private boolean timerState = true;
 
     private int milliseconds = 0;
     private int seconds = 0;
@@ -32,9 +39,10 @@ public class WorkerWindow extends JFrame
     public WorkerWindow(String username)
     {
         usernameLabel.setText(username);
+
         this.setContentPane(workerPanel);
         this.setTitle("Worker Panel");
-        this.setSize(500, 400);
+        this.setSize(500, 500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -45,7 +53,7 @@ public class WorkerWindow extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                state = true;
+                timerState = true;
 
                 Thread t = new Thread()
                 {
@@ -53,7 +61,7 @@ public class WorkerWindow extends JFrame
                     {
                         for (;;)
                         {
-                            if (state == true)
+                            if (timerState == true)
                             {
                                 try
                                 {
@@ -109,7 +117,7 @@ public class WorkerWindow extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                state = false;
+                timerState = false;
 
                 startWorkButton.setText("Continue Work");
             }
@@ -120,7 +128,7 @@ public class WorkerWindow extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                state = false;
+                timerState = false;
 
                 milliseconds = 0;
                 seconds = 0;
@@ -133,6 +141,32 @@ public class WorkerWindow extends JFrame
                 secondsLabel.setText("0:");
                 minutesLabel.setText("0:");
                 hoursLabel.setText("0:");
+            }
+        });
+
+        endWorkButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                conn = DBConnection.getConnection();
+
+                String sql = "insert into tasks values(null, ?, ?, ?)";
+
+                try
+                {
+                    state = conn.prepareStatement(sql);
+
+                    state.setString(1, usernameLabel.getText());
+                    state.setString(2, tasksComboBox.getSelectedItem().toString());
+                    state.setString(3, commentTextField.getText());
+
+                    state.execute();
+                }
+                catch (SQLException c)
+                {
+                    c.printStackTrace();
+                }
             }
         });
     }

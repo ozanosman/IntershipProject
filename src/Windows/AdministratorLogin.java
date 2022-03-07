@@ -5,10 +5,8 @@ import Utillity.Modal;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 
 /**
  * Administrator window class
@@ -16,7 +14,7 @@ import java.sql.Statement;
 public class AdministratorLogin extends JFrame {
     Connection conn=null;
     Statement state=null;
-    String username;
+
     JPanel Panel = new JPanel();
     JLabel usernameLabel=new JLabel("Име:");
     JLabel passwordLabel=new JLabel("Фамилия:");
@@ -56,7 +54,7 @@ public class AdministratorLogin extends JFrame {
                 state = conn.createStatement();
                 ResultSet rs = state.executeQuery(sql);
                 while(rs.next()) {
-                    username = rs.getString("username");
+                    String username = rs.getString("username");
                     String password = rs.getString("PASSWORD");
                     String type = rs.getString("type");
                     if (usernameTF.getText().equals(username)&&passwordTF.getText().equals(password)&&type.equals("Admin")) {
@@ -64,7 +62,7 @@ public class AdministratorLogin extends JFrame {
                     }
                 }
                 if(loggedIn){
-                    WorkerWindow window = new WorkerWindow(username);
+                    WorkerWindow window = new WorkerWindow(usernameTF.getText());
                 }else {
                     Modal.render(this,"Warning!","Invalid username or password");
                 }

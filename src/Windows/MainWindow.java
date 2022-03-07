@@ -8,8 +8,8 @@ import java.awt.*;
  */
 public class MainWindow extends JFrame {
     JPanel Panel=new JPanel();
-    JButton adminBt=new JButton("Администратор");
-    JButton workerBt =new JButton("Работник");
+    JButton adminBt=new JButton("Administrator");
+    JButton workerBt =new JButton("Worker");
     public MainWindow(){
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(400,400);
@@ -22,6 +22,9 @@ public class MainWindow extends JFrame {
         ButtonSetUp();
     }
 
+    /**
+     * Contains the logic of the buttons
+     */
     public void ButtonSetUp(){
         workerBt.addActionListener(e -> {
             WorkerLogin window = new WorkerLogin();

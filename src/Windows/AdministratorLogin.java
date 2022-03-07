@@ -16,12 +16,12 @@ public class AdministratorLogin extends JFrame {
     Statement state=null;
 
     JPanel Panel = new JPanel();
-    JLabel usernameLabel=new JLabel("Име:");
-    JLabel passwordLabel=new JLabel("Фамилия:");
+    JLabel usernameLabel=new JLabel("Username");
+    JLabel passwordLabel=new JLabel("Password");
     JTextField usernameTF=new JTextField();
     JTextField passwordTF=new JTextField();
     JButton loginBt=new JButton("Log in");
-    JButton backBt=new JButton("Назад");
+    JButton backBt=new JButton("Back");
 
     public AdministratorLogin(){
         this.setSize(600, 600);
@@ -62,7 +62,8 @@ public class AdministratorLogin extends JFrame {
                     }
                 }
                 if(loggedIn){
-                    WorkerWindow window = new WorkerWindow(usernameTF.getText());
+                    AdministratorMainWindow window = new AdministratorMainWindow(usernameTF.getText());
+                    this.dispose();
                 }else {
                     Modal.render(this,"Warning!","Invalid username or password");
                 }

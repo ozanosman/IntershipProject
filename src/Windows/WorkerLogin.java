@@ -15,12 +15,12 @@ public class WorkerLogin extends JFrame {
     Statement state=null;
 
     JPanel Panel = new JPanel();
-    JLabel usernameLabel=new JLabel("Име:");
-    JLabel passwordLabel=new JLabel("Парола:");
+    JLabel usernameLabel=new JLabel("Username");
+    JLabel passwordLabel=new JLabel("Password");
     JTextField usernameTF=new JTextField();
     JTextField passwordTF=new JTextField();
     JButton loginBt=new JButton("Log in");
-    JButton backBt =new JButton("Назад");
+    JButton backBt =new JButton("Back");
 
     public WorkerLogin(){
         this.setSize(600, 600);

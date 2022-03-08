@@ -11,6 +11,7 @@ public class MainWindow extends JFrame {
     JButton adminBt=new JButton("Administrator");
     JButton workerBt =new JButton("Worker");
     public MainWindow(){
+        this.setTitle("Main Window");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(400,400);
         this.setVisible(true);

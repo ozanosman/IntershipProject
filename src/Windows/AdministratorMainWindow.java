@@ -14,12 +14,14 @@ public class AdministratorMainWindow extends JFrame {
     JButton editUserBt =new JButton("Edit users");
     JButton searchBt=new JButton("Search task");
     AdministratorMainWindow(String name){
+        this.setTitle("Administrator Main Window");
         this.setSize(600, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         PanelSetUp();
         ButtonSetUp();
-        username = name;
+        this.username = name;
         this.add(Panel);
     }
 
@@ -38,7 +40,7 @@ public class AdministratorMainWindow extends JFrame {
             this.dispose();
         });
         workBt.addActionListener(e->{
-            WorkerWindow window = new WorkerWindow(username);
+            WorkerWindow window = new WorkerWindow(username, "Admin");
             this.dispose();
         });
         editUserBt.addActionListener(e->{

@@ -24,6 +24,7 @@ public class AdministratorLogin extends JFrame {
     JButton backBt=new JButton("Back");
 
     public AdministratorLogin(){
+        this.setTitle("Administrator Login");
         this.setSize(600, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);

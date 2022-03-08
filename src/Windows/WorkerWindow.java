@@ -5,17 +5,21 @@ import Utillity.DBConnection;
 import javax.swing.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.time.LocalTime;
 
 public class WorkerWindow extends JFrame
 {
-    Connection conn = null;
-    PreparedStatement state = null;
+    private Connection conn = null;
+    private PreparedStatement state = null;
 
     private JPanel workerPanel;
 
     private JLabel usernameLabel;
+    private JLabel typeLabel;
 
     private JComboBox tasksComboBox;
+
+    private JButton backButton;
 
     private JButton startWorkButton;
     private JButton breakButton;
@@ -36,17 +40,18 @@ public class WorkerWindow extends JFrame
     private int minutes = 0;
     private int hours = 0;
 
-    public WorkerWindow(String username)
+    public WorkerWindow(String username, String type)
     {
         usernameLabel.setText(username);
+        typeLabel.setText(type);
 
         this.setContentPane(workerPanel);
-        this.setTitle("Worker Panel");
+        this.setTitle("Worker Window");
         this.setSize(500, 500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         startWorkButton.addActionListener(new ActionListener()
         {
@@ -61,26 +66,26 @@ public class WorkerWindow extends JFrame
                     {
                         for (;;)
                         {
-                            if (timerState == true)
+                            if (timerState)
                             {
                                 try
                                 {
                                     sleep(1);
 
-                                    if (milliseconds > 1000)
+                                    if (milliseconds > 999)
                                     {
                                         milliseconds = 0;
                                         seconds++;
                                     }
 
-                                    if (seconds > 60)
+                                    if (seconds > 59)
                                     {
                                         milliseconds = 0;
                                         seconds = 0;
                                         minutes++;
                                     }
 
-                                    if (minutes > 60)
+                                    if (minutes > 59)
                                     {
                                         milliseconds = 0;
                                         seconds = 0;
@@ -151,7 +156,7 @@ public class WorkerWindow extends JFrame
             {
                 conn = DBConnection.getConnection();
 
-                String sql = "insert into tasks values(null, ?, ?, ?)";
+                String sql = "insert into tasks values(null, ?, ?, ?, ?)";
 
                 try
                 {
@@ -159,7 +164,8 @@ public class WorkerWindow extends JFrame
 
                     state.setString(1, usernameLabel.getText());
                     state.setString(2, tasksComboBox.getSelectedItem().toString());
-                    state.setString(3, commentTextField.getText());
+                    state.setTime(3, Time.valueOf(LocalTime.of(hours, minutes, seconds)));
+                    state.setString(4, commentTextField.getText());
 
                     state.execute();
                 }
@@ -167,6 +173,16 @@ public class WorkerWindow extends JFrame
                 {
                     c.printStackTrace();
                 }
+            }
+        });
+
+        backButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                MainWindow window = new MainWindow();
+                WorkerWindow.this.dispose();
             }
         });
     }

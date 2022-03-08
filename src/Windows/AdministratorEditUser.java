@@ -33,8 +33,10 @@ public class AdministratorEditUser extends JFrame {
     ResultSet result;
 
     AdministratorEditUser(){
+        this.setTitle("Administrator Edit Window");
         this.setSize(600, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         ButtonSetUp();
         panelSetUp();
@@ -114,7 +116,7 @@ public class AdministratorEditUser extends JFrame {
 
             try {
                 state = conn.prepareStatement(sql);
-                state.setInt(1,id);
+                state.setInt(1, id);
                 state.execute();
 
                 refreshTable();

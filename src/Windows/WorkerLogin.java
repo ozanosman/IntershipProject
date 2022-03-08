@@ -23,6 +23,7 @@ public class WorkerLogin extends JFrame {
     JButton backBt =new JButton("Back");
 
     public WorkerLogin(){
+        this.setTitle("Worker Login");
         this.setSize(600, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -61,7 +62,8 @@ public class WorkerLogin extends JFrame {
                     }
                 }
                 if(loggedIn){
-                    WorkerWindow window = new WorkerWindow(usernameTF.getText());
+                    WorkerWindow window = new WorkerWindow(usernameTF.getText(), "Worker");
+                    this.dispose();
                 }else {
                     Modal.render(this,"Warning!","Invalid username or password");
                 }

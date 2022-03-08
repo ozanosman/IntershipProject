@@ -176,14 +176,13 @@ public class WorkerWindow extends JFrame
             }
         });
 
-        backButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                MainWindow window = new MainWindow();
-                WorkerWindow.this.dispose();
+        backButton.addActionListener(e -> {
+            if(type.equals("Worker")){
+                WorkerLogin window = new WorkerLogin();
+            } else{
+                AdministratorMainWindow window = new AdministratorMainWindow(username);
             }
+            this.dispose();
         });
     }
 }

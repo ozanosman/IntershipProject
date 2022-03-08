@@ -19,14 +19,18 @@ public class AdministratorEditUser extends JFrame {
 
     JButton backBtn = new JButton("Back");
     JButton editUser= new JButton("Edit");
+    JButton addUser= new JButton("Add");
+    JButton delUser= new JButton("Delete");
     JTable table1 = new JTable();
     JScrollPane myScroll = new JScrollPane(table1);
     JPanel panel = new JPanel();
     JLabel usernameL = new JLabel("Username:");
     JLabel passwordL = new JLabel("Password:");
+    JLabel typeL = new JLabel("Type");
     JLabel listL = new JLabel("Users:");
     static JTextField usernameTF = new JTextField();
     static JTextField passwordTF = new JTextField();
+    static JTextField typeTF = new JTextField();
 
     Connection conn= null;
     PreparedStatement state = null;
@@ -51,6 +55,8 @@ public class AdministratorEditUser extends JFrame {
             this.dispose();
         });
         editUser.addActionListener(new EditActionOrders());
+        addUser.addActionListener(new AddActionOrders());
+        delUser.addActionListener(new DeleteActionUsers());
     }
 
     public void refreshTable(){
@@ -64,15 +70,19 @@ public class AdministratorEditUser extends JFrame {
         }
     }
     public void panelSetUp(){
-        panel.setLayout(new GridLayout(4,2));
+        panel.setLayout(new GridLayout(6,2));
         panel.add(listL);
         panel.add(myScroll);
         panel.add(usernameL);
         panel.add(usernameTF);
         panel.add(passwordL);
         panel.add(passwordTF);
-        panel.add(backBtn);
+        panel.add(typeL);
+        panel.add(typeTF);
+        panel.add(addUser);
+        panel.add(delUser);
         panel.add(editUser);
+        panel.add(backBtn);
     }
     class MouseAction implements MouseListener{
 
@@ -117,6 +127,45 @@ public class AdministratorEditUser extends JFrame {
             try {
                 state = conn.prepareStatement(sql);
                 state.setInt(1, id);
+                state.execute();
+
+                refreshTable();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    class AddActionOrders implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            conn = DBConnection.getConnection();
+            String sql = "insert into accounts(username,password,type) values (?,?,?)";
+
+            try {
+                PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                preparedStmt.setString(1, usernameTF.getText());
+                preparedStmt.setString(2, passwordTF.getText());
+                preparedStmt.setString(3, typeTF.getText());
+                preparedStmt.execute();
+
+                refreshTable();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+    class DeleteActionUsers implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            conn = DBConnection.getConnection();
+            String sqlDeleteString= "delete from accounts where username=?";
+
+            try {
+                state = conn.prepareStatement(sqlDeleteString);
+                state.setString(1,usernameTF.getText());
                 state.execute();
 
                 refreshTable();

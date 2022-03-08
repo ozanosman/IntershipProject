@@ -1,9 +1,9 @@
 package Windows;
 
 import Utillity.DBConnection;
+import Utillity.MyModel;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.sql.*;
 import java.time.LocalTime;
 
@@ -11,6 +11,7 @@ public class WorkerWindow extends JFrame
 {
     private Connection conn = null;
     private PreparedStatement state = null;
+    private ResultSet result;
 
     private JPanel workerPanel;
 
@@ -33,6 +34,9 @@ public class WorkerWindow extends JFrame
 
     private JTextField commentTextField;
 
+    private JTable tasksTable;
+    private JScrollPane tableScrollPane;
+
     private boolean timerState = true;
 
     private int milliseconds = 0;
@@ -45,144 +49,153 @@ public class WorkerWindow extends JFrame
         usernameLabel.setText(username);
         typeLabel.setText(type);
 
+        refreshTasksTable();
+
         this.setContentPane(workerPanel);
         this.setTitle("Worker Window");
-        this.setSize(500, 500);
+        this.setSize(1000, 500);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        startWorkButton.addActionListener(new ActionListener()
+        startWorkButton.addActionListener(e ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
+            timerState = true;
+
+            Thread t = new Thread()
             {
-                timerState = true;
-
-                Thread t = new Thread()
+                public void run()
                 {
-                    public void run()
+                    for (;;)
                     {
-                        for (;;)
+                        if (timerState)
                         {
-                            if (timerState)
+                            try
                             {
-                                try
+                                sleep(1);
+
+                                if (milliseconds > 999)
                                 {
-                                    sleep(1);
-
-                                    if (milliseconds > 999)
-                                    {
-                                        milliseconds = 0;
-                                        seconds++;
-                                    }
-
-                                    if (seconds > 59)
-                                    {
-                                        milliseconds = 0;
-                                        seconds = 0;
-                                        minutes++;
-                                    }
-
-                                    if (minutes > 59)
-                                    {
-                                        milliseconds = 0;
-                                        seconds = 0;
-                                        minutes = 0;
-                                        hours++;
-                                    }
-
-                                    milliseconds++;
-
-                                    millisecondsLabel.setText(milliseconds + "");
-                                    secondsLabel.setText(seconds + ":");
-                                    minutesLabel.setText(minutes + ":");
-                                    hoursLabel.setText(hours + ":");
+                                    milliseconds = 0;
+                                    seconds++;
                                 }
-                                catch (Exception e)
+
+                                if (seconds > 59)
                                 {
-
+                                    milliseconds = 0;
+                                    seconds = 0;
+                                    minutes++;
                                 }
+
+                                if (minutes > 59)
+                                {
+                                    milliseconds = 0;
+                                    seconds = 0;
+                                    minutes = 0;
+                                    hours++;
+                                }
+
+                                milliseconds++;
+
+                                millisecondsLabel.setText(milliseconds + "");
+                                secondsLabel.setText(seconds + ":");
+                                minutesLabel.setText(minutes + ":");
+                                hoursLabel.setText(hours + ":");
                             }
-                            else
+                            catch (Exception e)
                             {
-                                break;
+
                             }
                         }
+                        else
+                        {
+                            break;
+                        }
                     }
-                };
-
-                t.start();
-            }
-        });
-
-        breakButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                timerState = false;
-
-                startWorkButton.setText("Continue Work");
-            }
-        });
-
-        resetButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                timerState = false;
-
-                milliseconds = 0;
-                seconds = 0;
-                minutes = 0;
-                hours = 0;
-
-                startWorkButton.setText("Start Work");
-
-                millisecondsLabel.setText("0");
-                secondsLabel.setText("0:");
-                minutesLabel.setText("0:");
-                hoursLabel.setText("0:");
-            }
-        });
-
-        endWorkButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                conn = DBConnection.getConnection();
-
-                String sql = "insert into tasks values(null, ?, ?, ?, ?)";
-
-                try
-                {
-                    state = conn.prepareStatement(sql);
-
-                    state.setString(1, usernameLabel.getText());
-                    state.setString(2, tasksComboBox.getSelectedItem().toString());
-                    state.setTime(3, Time.valueOf(LocalTime.of(hours, minutes, seconds)));
-                    state.setString(4, commentTextField.getText());
-
-                    state.execute();
                 }
-                catch (SQLException c)
-                {
-                    c.printStackTrace();
-                }
+            };
+
+            t.start();
+        });
+
+        breakButton.addActionListener(e ->
+        {
+            timerState = false;
+
+            startWorkButton.setText("Continue Work");
+        });
+
+        resetButton.addActionListener(e ->
+        {
+            timerState = false;
+
+            milliseconds = 0;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+
+            startWorkButton.setText("Start Work");
+
+            millisecondsLabel.setText("0");
+            secondsLabel.setText("0:");
+            minutesLabel.setText("0:");
+            hoursLabel.setText("0:");
+        });
+
+        endWorkButton.addActionListener(e ->
+        {
+            conn = DBConnection.getConnection();
+
+            String sql = "insert into tasks values(null, ?, ?, ?, ?)";
+
+            try
+            {
+                state = conn.prepareStatement(sql);
+
+                state.setString(1, usernameLabel.getText());
+                state.setString(2, tasksComboBox.getSelectedItem().toString());
+                state.setTime(3, Time.valueOf(LocalTime.of(hours, minutes, seconds)));
+                state.setString(4, commentTextField.getText());
+
+                state.execute();
+
+                refreshTasksTable();
+                commentTextField.setText("");
+            }
+            catch (SQLException c)
+            {
+                c.printStackTrace();
             }
         });
 
-        backButton.addActionListener(e -> {
-            if(type.equals("Worker")){
+        backButton.addActionListener(e ->
+        {
+            if (type.equals("Worker"))
+            {
                 WorkerLogin window = new WorkerLogin();
-            } else{
+            }
+            else
+            {
                 AdministratorMainWindow window = new AdministratorMainWindow(username);
             }
             this.dispose();
         });
+    }
+
+    public void refreshTasksTable()
+    {
+        conn = DBConnection.getConnection();
+
+        try
+        {
+            state = conn.prepareStatement("select * from tasks");
+            result = state.executeQuery();
+            tasksTable.setModel(new MyModel(result));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

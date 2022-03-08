@@ -1,9 +1,7 @@
 package Windows;
 
-
 import javax.swing.*;
 import java.awt.*;
-
 
 public class AdministratorMainWindow extends JFrame {
     String username;

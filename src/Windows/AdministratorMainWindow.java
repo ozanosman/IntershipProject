@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class AdministratorMainWindow extends JFrame {
     String username;
-    JPanel Panel = new JPanel();
+    JPanel panel = new JPanel();
     JButton workBt=new JButton("Work");
     JButton backBt =new JButton("Back");
     JButton editTaskBt=new JButton("Edit tasks");
@@ -20,16 +20,16 @@ public class AdministratorMainWindow extends JFrame {
         PanelSetUp();
         ButtonSetUp();
         this.username = name;
-        this.add(Panel);
+        this.add(panel);
     }
 
     public void PanelSetUp(){
-        Panel.setLayout(new GridLayout(3,2));
-        Panel.add(workBt);
-        Panel.add(editUserBt);
-        Panel.add(editTaskBt);
-        Panel.add(searchBt);
-        Panel.add(backBt);
+        panel.setLayout(new GridLayout(3,2));
+        panel.add(workBt);
+        panel.add(editUserBt);
+        panel.add(editTaskBt);
+        panel.add(searchBt);
+        panel.add(backBt);
     }
 
     public void ButtonSetUp(){
@@ -43,6 +43,14 @@ public class AdministratorMainWindow extends JFrame {
         });
         editUserBt.addActionListener(e->{
             AdministratorEditUser window = new AdministratorEditUser();
+            this.dispose();
+        });
+        searchBt.addActionListener(e->{
+            AdministratorSearchTask window = new AdministratorSearchTask();
+            this.dispose();
+        });
+        editTaskBt.addActionListener(e->{
+            AdministratorEditTask window = new AdministratorEditTask();
             this.dispose();
         });
     }

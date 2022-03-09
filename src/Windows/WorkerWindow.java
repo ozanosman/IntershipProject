@@ -147,7 +147,7 @@ public class WorkerWindow extends JFrame
         {
             conn = DBConnection.getConnection();
 
-            String sql = "insert into tasks values(null, ?, ?, ?, ?)";
+            String sql = "insert into tasks values(null, ?, ?, ?, ?, curdate())";
 
             try
             {

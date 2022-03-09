@@ -63,12 +63,12 @@ public class AdministratorEditTask extends JFrame {
         panel.add(usernameTF);
         panel.add(taskL);
         panel.add(taskTF);
-        panel.add(dateL);
-        panel.add(dateTF);
         panel.add(timeL);
         panel.add(timeTF);
         panel.add(commentL);
         panel.add(commentTF);
+        panel.add(dateL);
+        panel.add(dateTF);
         panel.add(taskListL);
         panel.add(myScroll);
         panel.add(backBtn);

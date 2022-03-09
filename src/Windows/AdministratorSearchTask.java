@@ -25,7 +25,7 @@ public class AdministratorSearchTask extends JFrame {
 
     AdministratorSearchTask(){
         this.setTitle("Administrator Search Window");
-        this.setSize(600, 600);
+        this.setSize(1000, 1000);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -37,6 +37,17 @@ public class AdministratorSearchTask extends JFrame {
         backBtn.addActionListener(e -> {
             AdministratorLogin window = new AdministratorLogin();
             this.dispose();
+        });
+        searchBtn.addActionListener(e -> {
+            conn = DBConnection.getConnection();
+            try {
+                state = conn.prepareStatement("SELECT ID,USERNAME,TASK,TIME,COMMENT,DATE FROM TASKS WHERE DATE = ?");
+                state.setString(1,dateTF.getText());
+                result = state.executeQuery();
+                table.setModel(new MyModel(result));
+            } catch (Exception b){
+                b.printStackTrace();
+            }
         });
     }
     public void refreshTable(){

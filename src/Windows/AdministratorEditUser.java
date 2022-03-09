@@ -84,6 +84,7 @@ public class AdministratorEditUser extends JFrame {
         panel.add(editUser);
         panel.add(backBtn);
     }
+
     class MouseAction implements MouseListener{
 
         @Override

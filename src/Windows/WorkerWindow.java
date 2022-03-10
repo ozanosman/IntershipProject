@@ -30,7 +30,6 @@ public class WorkerWindow extends JFrame
     private JLabel hoursLabel;
     private JLabel minutesLabel;
     private JLabel secondsLabel;
-    private JLabel millisecondsLabel;
 
     private JTextField commentTextField;
 
@@ -39,7 +38,6 @@ public class WorkerWindow extends JFrame
 
     private boolean timerState = true;
 
-    private int milliseconds = 0;
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
@@ -73,33 +71,24 @@ public class WorkerWindow extends JFrame
                         {
                             try
                             {
-                                sleep(1);
+                                sleep(1000);
 
-                                if (milliseconds > 999)
+                                if (seconds == 59)
                                 {
-                                    milliseconds = 0;
-                                    seconds++;
-                                }
-
-                                if (seconds > 59)
-                                {
-                                    milliseconds = 0;
                                     seconds = 0;
                                     minutes++;
                                 }
 
                                 if (minutes > 59)
                                 {
-                                    milliseconds = 0;
                                     seconds = 0;
                                     minutes = 0;
                                     hours++;
                                 }
 
-                                milliseconds++;
+                                seconds++;
 
-                                millisecondsLabel.setText(milliseconds + "");
-                                secondsLabel.setText(seconds + ":");
+                                secondsLabel.setText(seconds + "");
                                 minutesLabel.setText(minutes + ":");
                                 hoursLabel.setText(hours + ":");
                             }
@@ -130,15 +119,13 @@ public class WorkerWindow extends JFrame
         {
             timerState = false;
 
-            milliseconds = 0;
             seconds = 0;
             minutes = 0;
             hours = 0;
 
             startWorkButton.setText("Start Work");
 
-            millisecondsLabel.setText("0");
-            secondsLabel.setText("0:");
+            secondsLabel.setText("0");
             minutesLabel.setText("0:");
             hoursLabel.setText("0:");
         });
@@ -147,7 +134,7 @@ public class WorkerWindow extends JFrame
         {
             conn = DBConnection.getConnection();
 
-            String sql = "insert into tasks(username,task,time,comment,date) values(?, ?, ?, ?, curdate())";
+            String sql = "insert into tasks (username, task, time, comment, date) values(?, ?, ?, ?, curdate())";
 
             try
             {
@@ -177,7 +164,7 @@ public class WorkerWindow extends JFrame
             }
             else
             {
-                AdministratorMainWindow window = new AdministratorMainWindow(username);
+                AdministratorLogin window = new AdministratorLogin();
             }
             this.dispose();
         });

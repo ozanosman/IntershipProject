@@ -14,8 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AdministratorEditTask extends JFrame {
-
+public class AdministratorEditTask extends JFrame
+{
     JTable table = new JTable();
     JScrollPane myScroll = new JScrollPane(table);
     JPanel panel = new JPanel();
@@ -29,30 +29,38 @@ public class AdministratorEditTask extends JFrame {
     JLabel taskL = new JLabel("Task:");
     JLabel commentL = new JLabel("Comment:");
     JLabel dateL = new JLabel("Date:");
+
     static JTextField dateTF = new JTextField();
     static JTextField usernameTF = new JTextField();
     static JTextField timeTF = new JTextField();
     static JTextField taskTF = new JTextField();
     static JTextField commentTF = new JTextField();
+
     int id = -1;
 
-    Connection conn= null;
+    Connection conn = null;
     PreparedStatement state = null;
     ResultSet result;
 
-    AdministratorEditTask(){
+    AdministratorEditTask()
+    {
         this.setTitle("Administrator Edit Window");
         this.setSize(1000, 1000);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
         panelSetUp();
         buttonSetUp();
         refreshTable();
+
         table.addMouseListener(new MouseAction());
     }
-    public void buttonSetUp(){
-        backBtn.addActionListener(e -> {
+
+    public void buttonSetUp()
+    {
+        backBtn.addActionListener(e ->
+        {
             AdministratorLogin window = new AdministratorLogin();
             this.dispose();
         });
@@ -60,18 +68,27 @@ public class AdministratorEditTask extends JFrame {
         addBtn.addActionListener(new AddActionTasks());
         editBtn.addActionListener(new EditActionOrders());
     }
-    public void refreshTable(){
+
+    public void refreshTable()
+    {
         conn = DBConnection.getConnection();
-        try {
+
+        try
+        {
             state = conn.prepareStatement("select * from tasks");
             result = state.executeQuery();
             table.setModel(new MyModel(result));
-        } catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
-    public void panelSetUp(){
+
+    public void panelSetUp()
+    {
         panel.setLayout(new GridLayout(8,2));
+
         panel.add(usernameL);
         panel.add(usernameTF);
         panel.add(taskL);
@@ -88,15 +105,20 @@ public class AdministratorEditTask extends JFrame {
         panel.add(delBtn);
         panel.add(editBtn);
         panel.add(backBtn);
+
         this.add(panel);
     }
-    class MouseAction implements MouseListener {
 
+    class MouseAction implements MouseListener
+    {
         @Override
-        public void mouseClicked(MouseEvent e) {
-            int row=table.getSelectedRow();
-            id=Integer.parseInt(table.getValueAt(row, 0).toString());
-            if(e.getClickCount()>1) {
+        public void mouseClicked(MouseEvent e)
+        {
+            int row = table.getSelectedRow();
+            id = Integer.parseInt(table.getValueAt(row, 0).toString());
+
+            if (e.getClickCount() > 1)
+            {
                 usernameTF.setText(table.getValueAt(row, 1).toString());
                 taskTF.setText(table.getValueAt(row, 2).toString());
                 timeTF.setText(table.getValueAt(row, 3).toString());
@@ -106,51 +128,63 @@ public class AdministratorEditTask extends JFrame {
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {
+        public void mousePressed(MouseEvent e)
+        {
 
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {
+        public void mouseReleased(MouseEvent e)
+        {
 
         }
 
         @Override
-        public void mouseEntered(MouseEvent e) {
+        public void mouseEntered(MouseEvent e)
+        {
 
         }
 
         @Override
-        public void mouseExited(MouseEvent e) {
+        public void mouseExited(MouseEvent e)
+        {
 
         }
     }
-    class DeleteActionTasks implements ActionListener {
 
+    class DeleteActionTasks implements ActionListener
+    {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent arg0)
+        {
             conn = DBConnection.getConnection();
-            String sqlDeleteString= "delete from tasks where comment=?";
+            String sqlDeleteString = "delete from tasks where comment=?";
 
-            try {
+            try
+            {
                 state = conn.prepareStatement(sqlDeleteString);
                 state.setString(1,commentTF.getText());
                 state.execute();
 
                 refreshTable();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
             }
         }
     }
-    class AddActionTasks implements ActionListener {
 
+    class AddActionTasks implements ActionListener
+    {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent arg0)
+        {
             conn = DBConnection.getConnection();
             String sql = "insert into tasks(username,task,time,comment,date) values (?,?,?,?,?)";
 
-            try {
+            try
+            {
                 PreparedStatement preparedStmt = conn.prepareStatement(sql);
                 preparedStmt.setString(1, usernameTF.getText());
                 preparedStmt.setString(2, taskTF.getText());
@@ -160,27 +194,33 @@ public class AdministratorEditTask extends JFrame {
                 preparedStmt.execute();
 
                 refreshTable();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
             }
         }
     }
 
-    class EditActionOrders implements ActionListener {
-
+    class EditActionOrders implements ActionListener
+    {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent arg0)
+        {
             conn = DBConnection.getConnection();
-            String sql = "update tasks set username='"+usernameTF.getText()+"',task='"+taskTF.getText()+"',time='"+timeTF.getText()+"',comment='"+commentTF.getText()+"',date='"+dateTF.getText()+"' where id=?";
+            String sql = "update tasks set username='" + usernameTF.getText() + "',task='" + taskTF.getText() + "',time='" + timeTF.getText() + "',comment='" + commentTF.getText() + "',date='" + dateTF.getText() + "' where id=?";
 
-            try {
+            try
+            {
                 state = conn.prepareStatement(sql);
                 state.setInt(1, id);
                 state.execute();
 
                 refreshTable();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
             }
         }
     }

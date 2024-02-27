@@ -9,7 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class AdministratorSearchTask extends JFrame {
+public class AdministratorSearchTask extends JFrame
+{
     JTable table = new JTable();
     JScrollPane myScroll = new JScrollPane(table);
     JPanel panel = new JPanel();
@@ -17,50 +18,70 @@ public class AdministratorSearchTask extends JFrame {
     JButton searchBtn = new JButton("Search");
     JLabel taskL = new JLabel("Task list:");
     JLabel dateL = new JLabel("Date:");
+
     static JTextField dateTF = new JTextField();
 
-    Connection conn= null;
+    Connection conn = null;
     PreparedStatement state = null;
     ResultSet result;
 
-    AdministratorSearchTask(){
+    AdministratorSearchTask()
+    {
         this.setTitle("Administrator Search Window");
         this.setSize(1000, 1000);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
         buttonSetUp();
         refreshTable();
         panelSetUp();
     }
-    public void buttonSetUp(){
-        backBtn.addActionListener(e -> {
+
+    public void buttonSetUp()
+    {
+        backBtn.addActionListener(e ->
+        {
             AdministratorLogin window = new AdministratorLogin();
             this.dispose();
         });
-        searchBtn.addActionListener(e -> {
+
+        searchBtn.addActionListener(e ->
+        {
             conn = DBConnection.getConnection();
-            try {
+
+            try
+            {
                 state = conn.prepareStatement("SELECT ID,USERNAME,TASK,TIME,COMMENT,DATE FROM TASKS WHERE DATE = ?");
                 state.setString(1,dateTF.getText());
                 result = state.executeQuery();
                 table.setModel(new MyModel(result));
-            } catch (Exception b){
+            }
+            catch (Exception b)
+            {
                 b.printStackTrace();
             }
         });
     }
-    public void refreshTable(){
+
+    public void refreshTable()
+    {
         conn = DBConnection.getConnection();
-        try {
+
+        try
+        {
             state = conn.prepareStatement("select * from tasks");
             result = state.executeQuery();
             table.setModel(new MyModel(result));
-        } catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
-    public void panelSetUp(){
+
+    public void panelSetUp()
+    {
         panel.setLayout(new GridLayout(3,2));
         panel.add(dateL);
         panel.add(dateTF);
@@ -68,6 +89,7 @@ public class AdministratorSearchTask extends JFrame {
         panel.add(myScroll);
         panel.add(backBtn);
         panel.add(searchBtn);
+
         this.add(panel);
     }
 }
